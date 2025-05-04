@@ -1,12 +1,12 @@
 window.addEventListener('DOMContentLoaded', () => {
 
-    let entryDataSection = document.getElementById('form-section');
+    // let entryDataSection = document.getElementById('form-section');
 
-      // POPUP SHOW
-      let popupSection = document.getElementById('popup-section');
+    // // POPUP SHOW
+    // let popupSection = document.getElementById('popup-section');
 
-        popupSection.classList.add('show');
-        document.body.style.overflow = 'hidden';
+    // // popupSection.classList.add('show');
+    // document.body.style.overflow = 'hidden';
 
     //   BUTTON NAVIGATE TO NEW SECTION
     let buttonNavNewSection = document.getElementById('tugas-2');
@@ -26,10 +26,10 @@ window.addEventListener('DOMContentLoaded', () => {
         popupSection.classList.remove('show');
         document.body.style.overflow = 'visible';
     })
-    
+
     // CLOSE POPUP USE CLICK ANYWHERE
     popupSection.addEventListener('click', (e) => {
-        if(e.target == popupSection || e.target == document.getElementById('popup-content-wr')) {
+        if (e.target == popupSection || e.target == document.getElementById('popup-content-wr')) {
             popupSection.classList.remove('show');
             document.body.style.overflow = 'visible';
         }
@@ -45,8 +45,8 @@ window.addEventListener('DOMContentLoaded', () => {
     let mobileMenuCloseTrigger = document.querySelector('.close-button-menu');
 
 
-    
-    if(window.innerWidth <= 600) {
+
+    if (window.innerWidth <= 600) {
 
         mobileMenuTrigger.addEventListener('click', () => {
             mobileMenu.classList.add('show');
@@ -65,42 +65,42 @@ window.addEventListener('DOMContentLoaded', () => {
         headerMenu.addEventListener('click', (e) => {
             e.preventDefault();
 
-            if(window.innerWidth <= 600) {
+            if (window.innerWidth <= 600) {
                 mobileMenu.classList.remove('show');
                 document.body.style.overflow = 'visible';
-            } 
+            }
 
             // AMBIL DATA BUTTON
             let dataButton = headerMenu.getAttribute('data-btn');
 
-            switch(dataButton) {
+            switch (dataButton) {
                 case 'about':
 
-                window.scrollTo(0, 0);
+                    window.scrollTo(0, 0);
 
-                break;
+                    break;
 
                 case 'project':
 
-                let projectSection = document.getElementById('myproject-section');
+                    let projectSection = document.getElementById('myproject-section');
 
-                projectSection.scrollIntoView();
+                    projectSection.scrollIntoView();
 
-                break;
+                    break;
 
                 case 'contact':
 
-                let contactSection = document.getElementById('contact-section');
+                    let contactSection = document.getElementById('contact-section');
 
-                contactSection.scrollIntoView();
+                    contactSection.scrollIntoView();
 
-                break;
+                    break;
 
                 case 'entry-data':
 
-                entryDataSection.scrollIntoView();
+                    entryDataSection.scrollIntoView();
 
-                break;
+                    break;
             }
 
         })
