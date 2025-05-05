@@ -1,12 +1,12 @@
 window.addEventListener('DOMContentLoaded', () => {
 
-    // let entryDataSection = document.getElementById('form-section');
+    let entryDataSection = document.getElementById('form-section');
 
-    // // POPUP SHOW
-    // let popupSection = document.getElementById('popup-section');
+    // POPUP SHOW
+    let popupSection = document.getElementById('popup-section');
 
-    // // popupSection.classList.add('show');
-    // document.body.style.overflow = 'hidden';
+    // popupSection.classList.add('show');
+    document.body.style.overflow = 'hidden';
 
     //   BUTTON NAVIGATE TO NEW SECTION
     let buttonNavNewSection = document.getElementById('tugas-2');

@@ -411,11 +411,12 @@ input {
   flex-direction: column;
   gap: 2rem;
   justify-content: center;
-  align-items: center;
+  align-items: start;
 }
 
 #fc-row2 {
   display: flex;
+  gap: 4rem;
 }
 
 .table-mahasiswa {

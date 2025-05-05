@@ -1,3 +1,28 @@
+<?php
+include 'db.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Jika ada parameter 'edit' di URL, lakukan update
+    if (isset($_GET['edit'])) {
+        $id = $_GET['edit'];
+        $stmt = $conn->prepare("UPDATE mahasiswa SET nama_lengkap = ?, tempat_lahir = ?, tanggal_lahir = ?, jenis_kelamin = ?, agama = ?, alamat = ? WHERE id = ?");
+        $stmt->bind_param("ssssssi", $_POST['nama_lengkap'], $_POST['tempat_lahir'], $_POST['tanggal_lahir'], $_POST['jenis_kelamin'], $_POST['agama'], $_POST['alamat'], $id);
+        $stmt->execute();
+        header("Location: index.php");
+        exit;
+    } else {
+        // Jika tidak ada parameter 'edit', insert data baru
+        $stmt = $conn->prepare("INSERT INTO mahasiswa (nama_lengkap, tempat_lahir, tanggal_lahir, jenis_kelamin, agama, alamat) VALUES (?, ?, ?, ?, ?, ?)");
+        $stmt->bind_param("ssssss", $_POST['nama_lengkap'], $_POST['tempat_lahir'], $_POST['tanggal_lahir'], $_POST['jenis_kelamin'], $_POST['agama'], $_POST['alamat']);
+        $stmt->execute();
+        header("Location: index.php");
+        exit;
+    }
+}
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -125,96 +150,150 @@
                     <h2 class="section-title">Entry Data</h2>
                 </div>
                 <div id="fc-row2" class="w100">
-                    <form id="entry-data-diri" action="#" method="post">
-                        <div id="edd-col1" class="edd">
-                            <label for="nama-lengkap">
-                                Nama lengkap
-                            </label>
-                            <input type="text" id="nama-lengkap">
-                        </div>
-                        <div id="edd-col2" class="edd">
-                            <label for="tempat-lahir">
-                                Tempat lahir
-                            </label>
-                            <input type="text" id="tempat-lahir">
-                        </div>
-                        <div id="edd-col3" class="edd">
-                            <label for="tanggal-lahir">
-                                Tanggal lahir
-                            </label>
-                            <input type="date" id="tanggal-lahir">
-                        </div>
-                        <div id="edd-col4" class="edd">
-                            <label for="jenis-kelamin">
-                                Jenis kelamin
-                            </label>
-                            <div id="ed-col4-2row">
-                                <div id="ed-col4-2row-row1" class="ed-col4-2row">
-                                    <input type="radio" name="gender" value="laki-laki">
-                                    Laki-Laki
-                                </div>
-                                <div id="ed-col4-2row-row2" class="ed-col4-2row">
-                                    <input type="radio" name="gender" value="perempuan">
-                                    Perempuan
+                    <form id="entry-data-diri" action="" method="post">
+                        <?php
+                        if (!isset($_GET['edit'])) {
+                        ?>
+                            <div id="edd-col1" class="edd">
+                                <label for="nama-lengkap">Nama lengkap</label>
+                                <input type="text" id="nama-lengkap" name="nama_lengkap">
+                            </div>
+                            <div id="edd-col2" class="edd">
+                                <label for="tempat-lahir">Tempat lahir</label>
+                                <input type="text" id="tempat-lahir" name="tempat_lahir">
+                            </div>
+                            <div id="edd-col3" class="edd">
+                                <label for="tanggal-lahir">Tanggal lahir</label>
+                                <input type="date" id="tanggal-lahir" name="tanggal_lahir">
+                            </div>
+                            <div id="edd-col4" class="edd">
+                                <label for="jenis-kelamin">Jenis kelamin</label>
+                                <div id="ed-col4-2row">
+                                    <div id="ed-col4-2row-row1" class="ed-col4-2row">
+                                        <input type="radio" name="jenis_kelamin" value="laki-laki"> Laki-Laki
+                                    </div>
+                                    <div id="ed-col4-2row-row2" class="ed-col4-2row">
+                                        <input type="radio" name="jenis_kelamin" value="perempuan"> Perempuan
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div id="edd-col5" class="edd">
-                            <label for="agama">Agama</label>
-                            <select name="agama" id="agama">
-                                <option value="islam">Islam</option>
-                                <option value="kristen">Kristen</option>
-                                <option value="katolik">Katolik</option>
-                                <option value="hindu">Hindu</option>
-                                <option value="budha">Budha</option>
-                                <option value="konghucu">Konghucu</option>
-                            </select>
-                        </div>
-                        <div id="edd-col6" class="edd">
-                            <label for="alamat-rumah">
-                                Alamat
-                            </label>
-                            <textarea name="alamat-rumah" id="alamat-rumah"></textarea>
-                        </div>
-                        <button type="button">Simpan Data</button>
+                            <div id="edd-col5" class="edd">
+                                <label for="agama">Agama</label>
+                                <select name="agama" id="agama">
+                                    <option value="islam">Islam</option>
+                                    <option value="kristen">Kristen</option>
+                                    <option value="katolik">Katolik</option>
+                                    <option value="hindu">Hindu</option>
+                                    <option value="budha">Budha</option>
+                                    <option value="konghucu">Konghucu</option>
+                                </select>
+                            </div>
+                            <div id="edd-col6" class="edd">
+                                <label for="alamat-rumah">Alamat</label>
+                                <textarea name="alamat" id="alamat-rumah"></textarea>
+                            </div>
+                            <button type="submit">Simpan Data</button>
+
+                        <?php
+                        } else {
+                            $id = $_GET['edit'];
+                            $result = $conn->query("SELECT * FROM mahasiswa WHERE id = '$id' ");
+                            $result = $result->fetch_assoc();
+
+                        ?>
+                            <div id="edd-col1" class="edd">
+                                <label for="nama-lengkap">Nama lengkap</label>
+                                <input type="text" id="nama-lengkap" name="nama_lengkap" value="<?php echo $result['nama_lengkap']; ?>">
+                            </div>
+                            <div id="edd-col2" class="edd">
+                                <label for="tempat-lahir">Tempat lahir</label>
+                                <input type="text" id="tempat-lahir" name="tempat_lahir" value="<?php echo $result['tempat_lahir']; ?>">
+                            </div>
+                            <div id="edd-col3" class="edd">
+                                <label for="tanggal-lahir">Tanggal lahir</label>
+                                <input type="date" id="tanggal-lahir" name="tanggal_lahir" value="<?php echo $result['tanggal_lahir'] ?>">
+                            </div>
+                            <div id="edd-col4" class="edd">
+                                <label for="jenis-kelamin">Jenis kelamin</label>
+                                <div id="ed-col4-2row">
+                                    <div id="ed-col4-2row-row1" class="ed-col4-2row">
+                                        <input type="radio" name="jenis_kelamin" value="laki-laki" <?php echo $result['jenis_kelamin'] === 'laki-laki' ? 'checked' : '' ?>> Laki-Laki
+                                    </div>
+                                    <div id="ed-col4-2row-row2" class="ed-col4-2row">
+                                        <input type="radio" name="jenis_kelamin" value="perempuan" <?php echo $result['jenis_kelamin'] === 'perempuan' ? 'checked' : '' ?>> Perempuan
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="edd-col5" class="edd">
+                                <label for="agama">Agama</label>
+                                <select name="agama" id="agama">
+                                    <option value="islam" <?php echo $result['agama'] == 'islam' ? 'selected' : '' ?>>Islam</option>
+                                    <option value="kristen" <?php echo $result['agama'] == 'kristen' ? 'selected' : '' ?>>Kristen</option>
+                                    <option value="katolik" <?php echo $result['agama'] == 'katolik' ? 'selected' : '' ?>>Katolik</option>
+                                    <option value="hindu" <?php echo $result['agama'] == 'hindu' ? 'selected' : '' ?>>Hindu</option>
+                                    <option value="budha" <?php echo $result['agama'] == 'budha' ? 'selected' : '' ?>>Budha</option>
+                                    <option value="konghucu" <?php echo $result['agama'] == 'konghucu' ? 'selected' : '' ?>>Konghucu</option>
+                                </select>
+                            </div>
+                            <div id="edd-col6" class="edd">
+                                <label for="alamat-rumah">Alamat</label>
+                                <textarea name="alamat" id="alamat-rumah"><?php echo $result['alamat']; ?></textarea>
+                            </div>
+                            <button type="submit">Update Data</button>
+
+
+                        <?php
+                        }
+                        ?>
                     </form>
+
                     <div class="table-mahasiswa">
                         <table border="1" cellpadding="10" cellspacing="0">
-                            <tr>
-                                <th>id</th>
-                                <th>nama</th>
-                                <th>nim</th>
-                                <th>prodi</th>
-                                <th>alamat</th>
-                                <th>action</th>
-                            </tr>
-                            <tr>
-                                <td>Nama lengkap</td>
-                                <td>tester</td>
-                            </tr>
-                            <tr>
-                                <td>Tempat lahir</td>
-                                <td>[Tempat lahir]</td>
-                            </tr>
-                            <tr>
-                                <td>Tanggal lahir</td>
-                                <td>[Tanggal lahir]</td>
-                            </tr>
-                            <tr>
-                                <td>Jenis kelamin</td>
-                                <td>Laki-Laki / Perempuan</td>
-                            </tr>
-                            <tr>
-                                <td>Agama</td>
-                                <td>Islam</td>
-                            </tr>
-                            <tr>
-                                <td>Alamat</td>
-                                <td>[Alamat]</td>
-                            </tr>
-                        </table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nama Lengkap</th>
+                                    <th>Tempat Lahir</th>
+                                    <th>Tanggal Lahir</th>
+                                    <th>Jenis Kelamin</th>
+                                    <th>Agama</th>
+                                    <th>Alamat</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php
+                                $result = $conn->query("SELECT * FROM mahasiswa");
+                                if (mysqli_num_rows($result) > 0) {
 
+                                    while ($row = $result->fetch_assoc()) :
+                                ?>
+                                        <tr>
+                                            <td><?= $row['id'] ?></td>
+                                            <td><?= $row['nama_lengkap'] ?></td>
+                                            <td><?= $row['tempat_lahir'] ?></td>
+                                            <td><?= $row['tanggal_lahir'] ?></td>
+                                            <td><?= $row['jenis_kelamin'] ?></td>
+                                            <td><?= $row['agama'] ?></td>
+                                            <td><?= $row['alamat'] ?></td>
+                                            <td>
+                                                <a href="index.php?edit=<?= $row['id'] ?>">Edit</a>
+                                                <a href="hapus.php?id=<?= $row['id'] ?>" onclick="return confirm('Yakin hapus?')">Hapus</a>
+                                            </td>
+                                        </tr>
+                                    <?php endwhile; ?>
+                                <?php
+                                } else {
+                                ?>
+                                    <p style="color: red;">No entries data!</p>
+                                <?php
+                                }
+
+                                ?>
+                            </tbody>
+                        </table>
                     </div>
+
                 </div>
             </div>
         </div>
